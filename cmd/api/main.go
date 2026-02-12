@@ -17,6 +17,7 @@ var (
 
 func main() {
 	http.HandleFunc("/jobs", handleCreateJob)
+	http.HandleFunc("/jobs/", handleGetJob)
 
 	log.Println("API running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -42,6 +43,32 @@ func handleCreateJob(w http.ResponseWriter, r *http.Request) {
 
 	store.Save(job)
 	jobQueue.Enqueue(job)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"job_id": job.ID,
+		"status": string(job.Status),
+	})
+}
+
+func handleGetJob(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	id := r.URL.Path[len("/jobs/"):]
+
+	if id == "" {
+		http.Error(w, "missing job id", http.StatusBadRequest)
+		return
+	}
+
+	job, ok := store.Get(id)
+	if !ok {
+		http.Error(w, "job not found", http.StatusNotFound)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
