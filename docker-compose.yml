@@ -1,11 +1,50 @@
 services:
-  farmq:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: farmq
+      args:
+        SERVICE: api
+    container_name: farmq-api
     ports:
       - "8080:8080"
-    environment:
-      - LOG_LEVEL=debug
+    depends_on:
+      - redis
+      - db
     restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: worker
+    container_name: farmq-worker
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: farmq-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: farmq-db
+    environment:
+      POSTGRES_USER: farmq
+      POSTGRES_PASSWORD: farmq
+      POSTGRES_DB: farmq
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

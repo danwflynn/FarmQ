@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	q := queue.NewMemoryQueue(100)
-	store := storage.NewMemoryStore()
+	q := queue.NewRedisQueue("redis:6379")
+	store := storage.NewPostgresStore("postgres://farmq:farmq@db:5432/farmq?sslmode=disable")
 
 	api.Start(q, store)
 }

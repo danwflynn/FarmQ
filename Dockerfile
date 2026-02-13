@@ -1,14 +1,19 @@
-FROM golang:1.25-alpine
+# Build stage
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
-
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-RUN go build -o farmq ./cmd/farmq
+ARG SERVICE
+RUN go build -o app ./cmd/${SERVICE}
 
-EXPOSE 8080
+# Runtime stage
+FROM alpine:latest
 
-CMD ["./farmq"]
+WORKDIR /app
+COPY --from=builder /app/app .
+
+CMD ["./app"]

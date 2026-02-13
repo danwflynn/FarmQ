@@ -30,5 +30,16 @@ jobs:
       - name: Run unit tests
         run: go test ./... -v
 
-      - name: Build Docker image
-        run: docker build -t farmq:ci .
+      - name: Build API Docker image
+        run: |
+          docker build \
+            --build-arg SERVICE=api \
+            -t farmq-api:ci \
+            -f Dockerfile .
+
+      - name: Build Worker Docker image
+        run: |
+          docker build \
+            --build-arg SERVICE=worker \
+            -t farmq-worker:ci \
+            -f Dockerfile .
