@@ -52,7 +52,7 @@ The goal of V1 is to build a fully working end-to-end system that allows clients
 
 3. **Implement GET /jobs/{id} endpoint**
    - Return job status
-   - Include result if job is COMPLETED
+   - Include result
 
 4. **Implement in-memory queue (local testing)**
    - Simple Go channel or slice to hold pending jobs
@@ -66,7 +66,6 @@ The goal of V1 is to build a fully working end-to-end system that allows clients
 
 6. **Integrate basic storage**
    - Start with in-memory storage for V1
-   - Optionally integrate S3/DynamoDB for practice
 
 7. **Containerize services**
    - Create Dockerfile for API service

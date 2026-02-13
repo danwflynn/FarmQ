@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"encoding/json"
 	"log"
 	"time"
 
@@ -23,6 +24,11 @@ func Start(q *queue.JobQueue, store storage.Store) {
 
 		// Simulate work
 		time.Sleep(2 * time.Second)
+
+		// Generate a result
+		result := map[string]string{"message": "Work done successfully!"}
+		resultJSON, _ := json.Marshal(result)
+		job.Result = resultJSON
 
 		// Mark as completed
 		job.Status = jobs.StatusCompleted
