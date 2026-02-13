@@ -1,27 +1,14 @@
 package main
 
 import (
-	"log"
-	"time"
-
-	"github.com/danwflynn/FarmQ/internal/jobs"
 	"github.com/danwflynn/FarmQ/internal/queue"
+	"github.com/danwflynn/FarmQ/internal/storage"
+	"github.com/danwflynn/FarmQ/internal/worker"
 )
 
-var jobQueue = queue.NewJobQueue(100)
-
 func main() {
-	log.Println("Worker started")
+	q := queue.NewJobQueue(100)
+	store := storage.NewMemoryStore()
 
-	for {
-		job := jobQueue.Dequeue()
-
-		log.Println("Processing job:", job.ID)
-
-		job.Status = jobs.StatusRunning
-		time.Sleep(2 * time.Second)
-
-		job.Status = jobs.StatusCompleted
-		log.Println("Completed job:", job.ID)
-	}
+	go worker.Start(q, store)
 }
