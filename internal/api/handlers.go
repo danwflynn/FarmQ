@@ -12,7 +12,7 @@ import (
 )
 
 type Handler struct {
-	Queue *queue.JobQueue
+	Queue queue.Queue
 	Store storage.Store
 }
 
@@ -56,7 +56,11 @@ func (h *Handler) handleCreateJob(w http.ResponseWriter, r *http.Request) {
 
 	job := jobs.NewJob(req.JobType, req.Payload)
 	h.Store.Save(job)
-	h.Queue.Enqueue(job)
+
+	if err := h.Queue.Enqueue(job); err != nil {
+		writeJSONError(w, http.StatusInternalServerError, "failed to enqueue job")
+		return
+	}
 
 	log.Printf("Created job: %s type: %s", job.ID, job.Type)
 

@@ -8,7 +8,7 @@ import (
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
-func Start(q *queue.JobQueue, store storage.Store) {
+func Start(q queue.Queue, store storage.Store) {
 	handler := &Handler{
 		Queue: q,
 		Store: store,

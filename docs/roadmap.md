@@ -60,7 +60,6 @@ The goal of V1 is to build a fully working end-to-end system that allows clients
 5. **Implement Worker service (local version)**
    - Poll queue
    - Pick job
-   - Execute uppercase transformation
    - Store result
    - Update job status
 

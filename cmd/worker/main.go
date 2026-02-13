@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	q := queue.NewJobQueue(100)
+	q := queue.NewMemoryQueue(100)
 	store := storage.NewMemoryStore()
 
 	go worker.Start(q, store)

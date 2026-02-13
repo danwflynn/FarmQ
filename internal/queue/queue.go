@@ -2,20 +2,22 @@ package queue
 
 import "github.com/danwflynn/FarmQ/internal/jobs"
 
-type JobQueue struct {
+type MemoryQueue struct {
 	Jobs chan *jobs.Job
 }
 
-func NewJobQueue(bufferSize int) *JobQueue {
-	return &JobQueue{
+func NewMemoryQueue(bufferSize int) *MemoryQueue {
+	return &MemoryQueue{
 		Jobs: make(chan *jobs.Job, bufferSize),
 	}
 }
 
-func (q *JobQueue) Enqueue(job *jobs.Job) {
+func (q *MemoryQueue) Enqueue(job *jobs.Job) error {
 	q.Jobs <- job
+	return nil
 }
 
-func (q *JobQueue) Dequeue() *jobs.Job {
-	return <-q.Jobs
+func (q *MemoryQueue) Dequeue() (*jobs.Job, error) {
+	job := <-q.Jobs
+	return job, nil
 }

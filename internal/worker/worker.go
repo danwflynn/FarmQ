@@ -10,12 +10,16 @@ import (
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
-func Start(q *queue.JobQueue, store storage.Store) {
+func Start(q queue.Queue, store storage.Store) {
 	log.Println("Worker started")
 
 	for {
 		// Wait for the next job
-		job := q.Dequeue()
+		job, err := q.Dequeue()
+		if err != nil {
+			log.Println("Error getting job from queue:", err)
+			continue
+		}
 		log.Println("Processing job:", job.ID)
 
 		// Mark as running
@@ -27,7 +31,13 @@ func Start(q *queue.JobQueue, store storage.Store) {
 
 		// Generate a result
 		result := map[string]string{"message": "Work done successfully!"}
-		resultJSON, _ := json.Marshal(result)
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			log.Printf("Failed to marshal result for job %s: %v", job.ID, err)
+			job.Status = jobs.StatusFailed
+			store.Save(job)
+			continue
+		}
 		job.Result = resultJSON
 
 		// Mark as completed
