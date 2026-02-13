@@ -7,8 +7,10 @@ import (
 	"github.com/google/uuid"
 )
 
+// JobStatus for status of a job
 type JobStatus string
 
+// enum for JobStatus
 const (
 	StatusPending   JobStatus = "PENDING"
 	StatusRunning   JobStatus = "RUNNING"
@@ -17,6 +19,7 @@ const (
 	StatusRetrying  JobStatus = "RETRYING"
 )
 
+// Job struct for necessary fields
 type Job struct {
 	ID        string          `json:"id"`
 	Type      string          `json:"type"`
@@ -28,6 +31,7 @@ type Job struct {
 	Retries   int             `json:"retries"`
 }
 
+// NewJob function for creating new job
 func NewJob(jobType string, payload json.RawMessage) *Job {
 	return &Job{
 		ID:        uuid.New().String(),

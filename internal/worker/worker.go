@@ -10,6 +10,7 @@ import (
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
+// Start function for starting worker server
 func Start(q queue.Queue, store storage.Store) {
 	log.Println("Worker started")
 

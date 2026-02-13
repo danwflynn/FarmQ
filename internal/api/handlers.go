@@ -11,11 +11,13 @@ import (
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
+// Handler for queues and storage
 type Handler struct {
 	Queue queue.Queue
 	Store storage.Store
 }
 
+// JobResponse for json responses to requests
 type JobResponse struct {
 	ID        string          `json:"job_id"`
 	Type      string          `json:"job_type"`

@@ -8,6 +8,7 @@ import (
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
+// Start the api server
 func Start(q queue.Queue, store storage.Store) {
 	handler := &Handler{
 		Queue: q,
