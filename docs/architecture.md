@@ -5,7 +5,7 @@
 1. Client sends POST /jobs
 2. API validates input
 3. Job record written to DynamoDB
-4. Message published to SQS
+4. Message published to queueing service
 5. Worker polls queue
 6. Worker marks job RUNNING
 7. Worker executes task
@@ -14,7 +14,7 @@
 
 ## Diagram
 
-Client → API Service → SQS service → Worker Service → S3 + DynamoDB
+Client → API Service → Queueing Service → Worker Service → S3 + DynamoDB
 
 ## Component Responsibilities
 
@@ -23,22 +23,23 @@ Client → API Service → SQS service → Worker Service → S3 + DynamoDB
 - Accept job submissions
 - Validate input
 - Persist job metadata
-- Publish job to SQS
+- Publish job to queueing service
 - Expose job status endpoint
 
 ### Worker Service
 
-- Poll SQS for messages
+- Poll queueing service for messages
 - Claim and process jobs
 - Update job status
 - Store results in S3
 - Handle retries and failures
 
-### SQS
+### Queueing Service
 
 - Durable job queue
 - At-least-once message delivery
 - Dead-letter queue for failed jobs
+- Interfacing for in memory queue, SQS and Redis
 
 ### DynamoDB
 
@@ -52,12 +53,12 @@ Client → API Service → SQS service → Worker Service → S3 + DynamoDB
 
 ## Delivery Guarantees
 
-FarmQ uses SQS Standard queues, which provide at-least-once delivery.
+FarmQ uses queues which provide at-least-once delivery.
 Workers must be idempotent because duplicate messages may occur.
 
 ## Consistency Considerations
 
-If publishing to SQS fails after writing to DynamoDB,
+If publishing to queueing service fails after writing to DynamoDB,
 the API should either:
 
 1. Retry publishing
