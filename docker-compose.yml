@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   farmq:
     build:
@@ -11,4 +9,3 @@ services:
     environment:
       - LOG_LEVEL=debug
     restart: unless-stopped
-    command: ["./farmq"]
