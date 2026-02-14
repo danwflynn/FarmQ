@@ -25,11 +25,11 @@ The goal of V1 is to build a fully working end-to-end system that allows clients
     - `COMPLETED` → successfully processed
     - `FAILED` → failed (optional for initial testing)
 - **Result Storage**
-  - Results are stored in S3 or locally (for initial development)
+  - Results are stored in database
 - **Queue**
-  - Jobs are placed in a queue (in-memory for local testing, AWS SQS for cloud)
+  - Jobs are placed in a queue
 - **Data Storage**
-  - Job metadata stored in DynamoDB or in-memory map for local testing
+  - Job metadata stored in database
 - **Dockerized Services**
   - API service and Worker service containerized with Docker
 - **CI/CD**

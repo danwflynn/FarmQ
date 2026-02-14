@@ -43,3 +43,21 @@ jobs:
             --build-arg SERVICE=worker \
             -t farmq-worker:ci \
             -f Dockerfile .
+
+      - name: Start full stack
+        run: docker compose up -d --build
+
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..15}; do
+            curl -f http://localhost:8080/health && break
+            echo "Waiting for API..."
+            sleep 2
+          done
+
+      - name: Run E2E tests
+        run: go test ./e2e -v
+
+      - name: Shutdown services
+        if: always()
+        run: docker compose down --volumes

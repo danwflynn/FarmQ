@@ -4,7 +4,7 @@
 
 1. Client sends POST /jobs
 2. API validates input
-3. Job record written to DynamoDB
+3. Job record written to database
 4. Message published to queueing service
 5. Worker polls queue
 6. Worker marks job RUNNING
@@ -14,7 +14,7 @@
 
 ## Diagram
 
-Client → API Service → Queueing Service → Worker Service → S3 + DynamoDB
+Client → API Service → Queueing Service → Worker Service → Storage
 
 ## Component Responsibilities
 
@@ -41,7 +41,7 @@ Client → API Service → Queueing Service → Worker Service → S3 + DynamoDB
 - Dead-letter queue for failed jobs
 - Interfacing for in memory queue, SQS and Redis
 
-### DynamoDB
+### Database
 
 - Persistent job metadata
 - Job status tracking
@@ -58,7 +58,7 @@ Workers must be idempotent because duplicate messages may occur.
 
 ## Consistency Considerations
 
-If publishing to queueing service fails after writing to DynamoDB,
+If publishing to queueing service fails after writing to database,
 the API should either:
 
 1. Retry publishing
