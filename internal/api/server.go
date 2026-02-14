@@ -3,13 +3,29 @@ package api
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/danwflynn/FarmQ/internal/queue"
 	"github.com/danwflynn/FarmQ/internal/storage"
 )
 
+// watForDB to wait for the database
+func waitForDB(store storage.Store) {
+	for i := 0; i < 30; i++ {
+		if err := store.Ping(); err == nil {
+			log.Println("Database ready")
+			return
+		}
+		log.Println("Waiting for database...")
+		time.Sleep(2 * time.Second)
+	}
+	log.Fatal("Database not ready after timeout")
+}
+
 // Start the api server
 func Start(q queue.Queue, store storage.Store) {
+	waitForDB(store)
+
 	handler := &Handler{
 		Queue: q,
 		Store: store,

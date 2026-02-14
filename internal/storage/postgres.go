@@ -63,3 +63,9 @@ func (p *PostgresStore) Get(id string) (*jobs.Job, bool) {
 
 	return &job, true
 }
+
+// Ping the database
+func (p *PostgresStore) Ping() error {
+	var tmp int
+	return p.db.QueryRow(p.ctx, "SELECT 1").Scan(&tmp)
+}

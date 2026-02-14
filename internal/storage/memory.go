@@ -33,3 +33,8 @@ func (s *MemoryStore) Get(id string) (*jobs.Job, bool) {
 	job, ok := s.jobs[id]
 	return job, ok
 }
+
+// Ping always returns no error
+func (s *MemoryStore) Ping() error {
+	return nil
+}
