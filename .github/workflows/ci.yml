@@ -61,6 +61,12 @@ jobs:
           docker compose logs
           exit 1
 
+      - name: Show container status
+        run: docker compose ps
+
+      - name: Show container logs
+        run: docker compose logs
+      
       - name: Run E2E tests
         run: go test -tags=e2e ./e2e -v
 
