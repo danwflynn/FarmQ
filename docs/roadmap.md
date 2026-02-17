@@ -83,6 +83,10 @@ The goal of V1 is to build a fully working end-to-end system that allows clients
 
 ---
 
+In V1, redis is used for the queue and postgres is used for the database.
+
+---
+
 ## Future Improvements (V2+)
 
 - Add multiple job types

@@ -11,7 +11,7 @@ import (
 
 // watForDB to wait for the database
 func waitForDB(store storage.Store) {
-	for i := 0; i < 30; i++ {
+	for range 30 {
 		if err := store.Ping(); err == nil {
 			log.Println("Database ready")
 			return
